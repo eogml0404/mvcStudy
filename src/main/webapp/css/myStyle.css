@@ -1,0 +1,37 @@
+@charset "utf-8";
+
+body {background-color: navy; color: blueviolet;
+	margin-left: 30px; margin-right: 30px;
+
+}
+
+h3 {text-align: center; color:white;}
+
+span {color: yellow;}
+
+.name {color: orange;} /*class 콜렉터*/
+
+#subj {color: green;}	/*id 콜렉터*/
+
+ul strong {color: dodgerblue;}	/*자손콜렉터*/
+div > strong {background-color:  yellow;} /*자식콜렉터*/ 
+
+input[type=text]{color: red;}
+
+a:visited {color: green; text-decoration:none;}
+
+li:hover {background-color: yellowgreen;}
+a:link {color: white;}
+a{
+	text-decoration: none;
+}
+
+#list {background-color: white;}
+
+div > span {color: rgb(255, 0, 0);}
+
+strong {color:red; font-size: 20px;}
+
+.textStyle {
+	text-align: center; font-size:20px ; font-style: italic;font-weight: bold;
+}

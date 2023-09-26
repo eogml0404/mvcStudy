@@ -1,0 +1,10 @@
+@charset "utf-8";
+
+h3, em {color: green;}
+
+body.main {background-color: skyblue;}
+div > strong {background-color: yellow; color: blue;}
+#center { text-align: center;}
+.indent {text-indent: 5em;}
+div em {font-style: italic;}
+div.indent strong {color: red;}
