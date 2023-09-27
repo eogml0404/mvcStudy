@@ -22,7 +22,7 @@ import app.domain.MemberVo;
 public class CommentController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
       
-	private String location; 
+	private String location;  
 	public CommentController(String location){
 		this.location = location;
 	}

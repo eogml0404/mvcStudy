@@ -1,8 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
     pageEncoding="utf-8"%>
 <%@ page import= "app.domain.BoardVo" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
     
-<% BoardVo bv = (BoardVo)request.getAttribute("bv"); %>    
+<% //BoardVo bv = (BoardVo)request.getAttribute("bv"); %>    
 
 <%
 	//로그인안하면
@@ -47,7 +48,7 @@ function check(){
 	
 	
 	//처리하기위해 이동하는 주소
-	fm.action ="<%=request.getContextPath()%>/board/boardReplyAction.do";  
+	fm.action ="${pageContext.request.contextPath}/board/boardReplyAction.do";  
 	fm.method = "post";  //이동하는 방식  get 노출시킴 post 감추어서 전달
 	fm.submit(); //전송시킴
 	return;
@@ -56,10 +57,10 @@ function check(){
 <body>
 <h1>글답변페이지</h1>
 	<form name="frm">
-	<input type="text" name="bidx" value="<%=bv.getBidx() %>">
-	<input type="text" name="originbidx" value="<%=bv.getOriginbidx() %>">
-	<input type="text" name="depth" value="<%=bv.getDepth() %>">
-	<input type="text" name="level_" value="<%=bv.getLevel_() %>">
+	<input type="text" name="bidx" value="${bv.bidx}">
+	<input type="text" name="originbidx" value="${bv.originbidx}">
+	<input type="text" name="depth" value="${bv.depth}">
+	<input type="text" name="level_" value="${bv.level_}">
 	
 	
 		<table border="1" style="width:600px">
