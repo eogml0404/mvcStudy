@@ -17,6 +17,7 @@ import app.domain.CommentVo;
 import app.domain.MemberVo;
 
 
+//깃허브 test
 @WebServlet("/CommentController")
 public class CommentController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
