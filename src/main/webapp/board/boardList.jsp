@@ -106,8 +106,17 @@ method="post">
 <c:forEach var="i" begin="${pm.startPage}" end="${pm.endPage}" step="1">
 
 <a href="${pageContext.request.contextPath}/board/boardList.do?page=${i}${parm}">
+<c:if test ="${pm.scri.page == i}">
+
+<font color="red" >${i}</font>
+
+</c:if>
+
+<c:if test ="${pm.scri.page != i}">
+
 ${i}
 
+</c:if>
 
 </a> &nbsp;
 <%		
