@@ -38,6 +38,7 @@ public class CommentController extends HttpServlet {
 			String cwriter="";
 			String ccontents="";
 			String cwriteday="";
+			int midx = 0;
 			String str ="";
 			
 			for(int i=0; i<listCnt; i++) {
@@ -45,6 +46,7 @@ public class CommentController extends HttpServlet {
 				cwriter = list.get(i).getCwriter();
 				ccontents = list.get(i).getCcontents();
 				cwriteday = list.get(i).getCwriteday();
+				midx = list.get(i).getMidx();
 				
 				String comma = "";
 				if (i == listCnt-1 ) {  //마지막 횟수이면
@@ -53,15 +55,52 @@ public class CommentController extends HttpServlet {
 					comma = ",";
 				}
 				
-				str = str + "{\"cidx\":\""+cidx+"\",\"cwriter\":\""+cwriter+"\",\"ccontents\":\""+ccontents+"\",\"cwriteday\":\""+cwriteday+"\"}"+comma;				
+				str = str + "{\"cidx\":\""+cidx+"\",\"cwriter\":\""+cwriter+"\",\"ccontents\":\""+ccontents+"\",\"cwriteday\":\""+cwriteday+"\",\"midx\":\""+midx+"\"}"+comma;				
 			}			
 			
 			//json파일형식의 여러개의 데이터 를 담는다
-			//String mnm = "[{\"nm\":\"홍길동\"},{\"nm\":\"이순신\"}]";
+			//String str = "[{\"nm\":\"홍길동\"},{\"nm\":\"이순신\"}]";
 						
 			PrintWriter out = response.getWriter();
 			out.println("["+str+"]");
-			//out.println(mnm);
+			
+		}else if(location.equals("commentWrite.do")) {
+			
+			String bidx = request.getParameter("bidx");
+			String midx = request.getParameter("midx");
+			String cwriter = request.getParameter("cwriter");
+			String ccontents = request.getParameter("ccontents");
+			
+			CommentVo cv = new CommentVo();
+			cv.setBidx(Integer.parseInt(bidx));
+			cv.setMidx(Integer.parseInt(midx));
+			cv.setCwriter(cwriter);
+			cv.setCcontents(ccontents);
+			
+			int value=0;
+			//댓글입력 메소드 만든다
+			CommentDao cd = new CommentDao();
+			value = cd.commentInsert(cv);			
+			
+			String str ="{\"value\":\""+value+"\"}";
+			
+			PrintWriter out = response.getWriter();
+			out.println(str);			
+		}else if(location.equals("commentDelete.do")) {
+			
+			String cidx = request.getParameter("cidx");
+			
+			int value = 0;
+			//처리하는 메소드를 만든다
+		
+			CommentDao cd = new CommentDao();
+			value = cd.commentDelete(Integer.parseInt(cidx));
+			
+			
+			String str ="{\"value\":\""+value+"\"}";
+			
+			PrintWriter out = response.getWriter();
+			out.println(str);	
 			
 		}
 		

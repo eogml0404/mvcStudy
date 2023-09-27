@@ -3,6 +3,7 @@ package app.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import app.dbconn.DbConn;
@@ -66,9 +67,68 @@ public class CommentDao {
 		} 
 		
 		
+		public int commentInsert(CommentVo cv){
+			System.out.println("내용은?"+cv.getCcontents());
+			
+			int exec = 0;			
+			String sql = "insert into comment0803(cwriter,ccontents,bidx,midx) values(?,?,?,?)";
+			
+			try{
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, cv.getCwriter());
+			pstmt.setString(2, cv.getCcontents());
+			pstmt.setInt(3, cv.getBidx());
+			pstmt.setInt(4, cv.getMidx());			
+			exec = pstmt.executeUpdate();   //실행이되면 1값 안되면 0값
+			}catch(Exception e){
+				e.printStackTrace();
+			}finally {				
+				try {
+					pstmt.close();
+					conn.close();
+				} catch (SQLException e) {					
+					e.printStackTrace();
+				}
+			}			
+			
+			return exec;	
+		}
 		
+		public int delete(CommentVo cv) {
+			String SQL = "delete from comment0803 where delyn = ?";
+			try {
+				PreparedStatement pstmt=conn.prepareStatement(SQL);
+				pstmt.setString(1, cv.getDelyn());
+				return pstmt.executeUpdate();			
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+			return -1;//데이터베이스 오류
+		}
 		
-		
+		public int commentDelete(int cidx){
+			
+			int exec = 0;			
+			String sql = "update comment0803 set delyn='Y' where cidx=?";
+			
+			try{
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, cidx);
+				
+			exec = pstmt.executeUpdate();   //실행이되면 1값 안되면 0값
+			}catch(Exception e){
+				e.printStackTrace();
+			}finally {				
+				try {
+					pstmt.close();
+					conn.close();
+				} catch (SQLException e) {					
+					e.printStackTrace();
+				}
+			}			
+			
+			return exec;	
+		}
 	
 
 }

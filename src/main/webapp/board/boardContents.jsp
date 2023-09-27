@@ -2,7 +2,11 @@
     pageEncoding="utf-8"%>
 <%@ page import="app.domain.BoardVo" %>    
 <%
-BoardVo bv = (BoardVo)request.getAttribute("bv");
+	if (session.getAttribute("midx") ==null){
+		 out.println("<script>alert('로그인하셔야 합니다.');location.href='"+request.getContextPath()+"/member/memberLogin.do'</script>");	 
+	}
+	
+	BoardVo bv = (BoardVo)request.getAttribute("bv");
 %>   
     
 <!DOCTYPE html>
@@ -18,9 +22,42 @@ BoardVo bv = (BoardVo)request.getAttribute("bv");
 $(document).ready(function(){
 	$.boardCommentList();
 	
-	
-	
-	
+	//버튼을 클릭하면 입력된 데이터를 가지고 commentWrite.do로 넘겨서 DB에 입력한다 
+	$("#save").on("click",function(){
+		//alert("클릭");
+		
+		let cwriter = $("#cwriter").val();
+		let ccontents = $("#ccontents").val();
+		let bidx = <%=bv.getBidx()%>;
+		let midx = <%=session.getAttribute("midx")%>;
+		
+		$.ajax({
+			type : "post",
+			url : "<%=request.getContextPath()%>/comment/commentWrite.do",
+			dataType : "json",
+			data : {
+					"bidx" : bidx,
+					"midx" : midx,
+					"cwriter" : cwriter,
+					"ccontents" : ccontents				
+			},			
+			cache : false,
+			success : function(data){
+				//alert("통신성공");	
+				//alert(data.value);
+				//if (data.value ==1){
+					//alert("등록성공");
+				//}
+				$.boardCommentList();
+				$("#cwriter").val("");
+				$("#ccontents").val("");
+							
+			},
+			error : function(){
+				alert("통신오류 실패");				
+			}		
+		});		
+	});		
 });
 
 
@@ -32,14 +69,12 @@ $.boardCommentList= function(){
 		dataType : "json",
 		cache : false,
 		success : function(data){
-		//	alert("통신성공");
-			commentList(data);
-		//	$.each(data,function(index)){
-		//		alert(index);
-		//		alert(data[index].cidx);
-		//		
-		//	})
+			//alert("통신성공");
 			
+				commentList(data);
+				//$.each(data, function(index){				   	
+			     //  alert(data[index].midx);		
+			      //});			
 		},
 		error : function(){
 			alert("통신오류 실패");
@@ -48,23 +83,69 @@ $.boardCommentList= function(){
 	});
 	
 }
-function commentList(data){
+
+function commentDel(cidx){
 	
-	var str = "";
-	str = "<tr><td>번호</td><td>작성자</td><td>내용</td><td>등록일</td></tr>";
-	
-	$(data).each(function(){
+	$.ajax({
+		type : "get",
+		//cidx get방식으로 가져가는법
+		url : "<%=request.getContextPath()%>/comment/commentDelete.do?cidx="+cidx,
+		dataType : "json",
+		cache : false,
+		success : function(data){
+			//alert("통신성공");
+			if (data.value ==1){
+					alert("삭제성공");
+				}
+			
+			
+			 	$.boardCommentList();
 		
-		str = str + "<tr><td>"+this.cidx+"번호</td><td>"+this.cwriter+"</td><td>"+this.contents+"</td><td>"+this.cwriteday+"</td></tr>";
-		
-		
+				//$.each(data, function(index){				   	
+			     //  alert(data[index].midx);		
+			      //});			
+		},
+		error : function(){
+			alert("통신오류 실패");
+			
+		}		
 	});
 	
-	$('#tbl').html("<table border=1 style='width:600px'>"+str+"</table>");	
+	
+	
 	
 	return;
 }
 
+
+function commentList(data){
+	
+	var str="";
+	str = "<tr><td>번호</td><td>작성자</td><td>내용</td><td>등록일</td><td>삭제</td></tr>"
+	
+	var delBtn= "";		
+	
+	var loginMidx = "<%=session.getAttribute("midx")%>"; 
+		
+	$(data).each(function(){
+		
+		if (loginMidx == this.midx){
+			delBtn= "<button type='button' id='btn' onclick='commentDel("+this.cidx+")'>삭제</button>";
+		}else{
+			delBtn="";
+		}
+		
+		str = str + "<tr><td>"+this.cidx+"</td><td>"+this.cwriter+"</td><td>"+this.ccontents+"</td><td>"+this.cwriteday+"</td><td>"+delBtn+"</td></tr>"	
+	
+	
+	
+	
+	});
+	
+	$("#tbl").html("<table border=1 style='width:600px'>"+str+"</table>");
+	
+	return;
+}
 
 
 </script>
@@ -100,22 +181,21 @@ function commentList(data){
 <table border=1 style="width:600px;">
 <tr>
 <td>작성자</td>
-<td><input type="text" name="cwriter" size="20"></td>
+<td>
+<input type="text" name="cwriter" id="cwriter" size="20">
+</td>
 <td rowspan=2>
-<input type="button" name="btn" value="저장" onclick="check();"> </td>
+<input type="button" name="btn" value="저장" id="save"> </td>
 </tr>
 <tr>
 <td>내용</td>
 <td>
-<textarea name="ccontents" cols="50" rows="3" placeholder="내용입력하세요"> 
-</textarea>
+<textarea name="ccontents" id="ccontents" cols="50" rows="3" placeholder="내용입력하세요"></textarea>
 </td>
 </tr>
 </table>
 
 <div id="tbl"></div>
-
-
 
 </body>
 </html>
